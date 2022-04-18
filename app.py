@@ -1,5 +1,4 @@
 import re
-import matplotlib
 import pandas as pd
 import streamlit as st
 from swot import Swot
@@ -134,15 +133,23 @@ if vikor_bool and adv_file is not None:
     vikor_object.update_indices()
 
     st.write("## Input Data for VIKOR Analysis")
-    st.table(vikor_object.eval_s_r()[0].style.applymap(
-        lambda elem: f"background-color: {color_dict[elem[0]] if re.match(match_str, elem) else color_dict['REST']}",
-        subset=(["feature"])
-    ).highlight_max(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
-     .highlight_max(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
-     .highlight_min(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
-     .highlight_min(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
-     .set_precision(5))
-    st.table(vikor_object.eval_q().style.highlight_min(subset=("Q",), axis=1, color="yellow").set_precision(5))
+    col_v_1, col_v_2 = st.columns([2, 1])
+    with col_v_1:
+        st.table(vikor_object.eval_s_r()[0].style.applymap(
+            lambda elem: f"background-color: {color_dict[elem[0]] if re.match(match_str, elem) else color_dict['REST']}",
+            subset=(["feature"])
+        ).highlight_max(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
+         .highlight_max(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
+         .highlight_min(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
+         .highlight_min(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
+         .set_precision(5))
+        st.table(vikor_object.eval_q().style.highlight_min(subset=("Q",), axis=1, color="yellow").set_precision(5))
+
+    with col_v_2:
+        st.write("### Evaluation Criteria")
+        st.table(vikor_object.eval_criteria.style.applymap(
+            lambda elem: f"background-color: {color_dict[elem[0]]}", subset=["alternative"]
+        ).set_precision(2))
 
     st.write("## Sequence of alternatives based on S, R and Q")
     final_table, best_string = vikor_object.range()

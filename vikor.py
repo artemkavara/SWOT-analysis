@@ -61,7 +61,7 @@ class Vikor(BaseTopsisVikor):
         final_table = pd.concat([
             pd.Series(sorted_s.columns, name="S"),
             pd.Series(sorted_r.columns, name="R"),
-            pd.Series(q_df.columns, name="O")
+            pd.Series(q_df.columns, name="Q")
         ], axis=1).T
 
         best_string = q_df.columns[-1] if q_df.iloc[0, -2] - q_df.iloc[0, -1] >= dq \
