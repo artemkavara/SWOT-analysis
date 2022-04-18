@@ -1,11 +1,12 @@
 import re
-
+import matplotlib
+import pandas as pd
 import streamlit as st
 from swot import Swot
 from topsis import Topsis
 from vikor import Vikor
 from constants import Constants
-import pandas as pd
+
 
 st.set_page_config(layout="wide")
 st.title('SWOT Analysis')
