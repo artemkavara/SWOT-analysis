@@ -39,11 +39,11 @@ class Vikor(BaseTopsisVikor):
 
         def q(s, r, s_max, s_min, r_max, r_min):
             if s_max == s_min:
-                return (r-r_max)/(r_min-r_max)
+                return (r-r_min)/(r_max-r_min)
             elif r_max == r_min:
-                return (s-s_max)/(s_min-s_max)
+                return (s-s_min)/(s_max-s_min)
             else:
-                return v*((s-s_max)/(s_min-s_max)) + (1-v)*((r-r_max)/(r_min-r_max))
+                return v*((s-s_min)/(s_max-s_min)) + (1-v)*((r-r_min)/(r_max-r_min))
 
         q_arr = np.array([q(eval_s_r_df.iloc[0, col], eval_s_r_df.iloc[1, col], eval_s_r_df.iloc[0, 5],
                             eval_s_r_df.iloc[0, 6], eval_s_r_df.iloc[1, 5], eval_s_r_df.iloc[1, 6])
@@ -53,19 +53,20 @@ class Vikor(BaseTopsisVikor):
         return q_df
 
     def range(self):
-        q_df = self.eval_q().sort_values(by=["Q"], axis=1, ascending=False)
+        q_df = self.eval_q().sort_values(by=["Q"], axis=1)
         _, eval_s_r_df = self.eval_s_r()
         eval_s_r_df.reset_index(drop=True, inplace=True)
-        sorted_s = eval_s_r_df[["SO", "WO", "ST", "WT"]].sort_values(by=[0], axis=1, ascending=False)
-        sorted_r = eval_s_r_df[["SO", "WO", "ST", "WT"]].sort_values(by=[1], axis=1, ascending=False)
+        sorted_s = eval_s_r_df[["SO", "WO", "ST", "WT"]].sort_values(by=[0], axis=1)
+        sorted_r = eval_s_r_df[["SO", "WO", "ST", "WT"]].sort_values(by=[1], axis=1)
         final_table = pd.concat([
             pd.Series(sorted_s.columns, name="S"),
             pd.Series(sorted_r.columns, name="R"),
             pd.Series(q_df.columns, name="Q")
         ], axis=1).T
         dq = 1 / 3
-        best_string = q_df.columns[-1] if q_df.iloc[0, -2] - q_df.iloc[0, -1] >= dq \
-            else sorted_s.columns[0] if sorted_s.columns[0] == sorted_r.columns[0] else "not available"
+        best_string = q_df.columns[0] if q_df.iloc[0, -2] - q_df.iloc[0, -1] >= dq or \
+                                          sorted_s.columns[0] == q_df.columns[0] or \
+                                          sorted_r.columns[0] == q_df.columns[0] else "not available"
         return final_table, best_string
 
 
