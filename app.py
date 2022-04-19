@@ -141,10 +141,10 @@ if vikor_bool and adv_file is not None:
         st.table(vikor_object.eval_s_r()[0].style.applymap(
             lambda elem: f"background-color: {color_dict[elem[0]] if re.match(match_str, elem) else color_dict['REST']}",
             subset=(["feature"])
-        ).highlight_max(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
-         .highlight_max(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
-         .highlight_min(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
-         .highlight_min(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
+        ).highlight_max(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
+         .highlight_max(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
+         .highlight_min(subset=(["Max Group Benefit"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
+         .highlight_min(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="green", axis=1)
          .set_precision(5))
 
     st.table(vikor_object.eval_q(v).style.highlight_min(subset=("Q",), axis=1, color="yellow").set_precision(5))
