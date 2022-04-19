@@ -7,7 +7,7 @@ from vikor import Vikor
 from constants import Constants
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="SWOT Analysis")
 st.title('SWOT Analysis')
 
 swot_object = Swot()
@@ -36,6 +36,8 @@ if topsis_bool or vikor_bool:
     with col_01:
         adv_file = st.file_uploader("Choose a file with your data for TOPSIS/VIKOR analysis in .xlsx format",
                                     type=[".xls", ".xlsx"])
+        if vikor_bool:
+            dq = st.number_input("Enter minimum threshold for Q(A2)-Q(A1): ", value=1/3)
 
 if full_file is not None:
     swot_elem = pd.read_excel(full_file, sheet_name=0)
@@ -154,7 +156,7 @@ if vikor_bool and adv_file is not None:
         ).set_precision(2))
 
     st.write("## Sequence of alternatives based on S, R and Q")
-    final_table, best_string = vikor_object.range()
+    final_table, best_string = vikor_object.range(dq)
     st.table(final_table)
     st.write(f"#### Best strategy (VIKOR) is " +
              f"{constants.__getattribute__(best_string) if not best_string == 'not available' else best_string}")
