@@ -37,7 +37,7 @@ if topsis_bool or vikor_bool:
         adv_file = st.file_uploader("Choose a file with your data for TOPSIS/VIKOR analysis in .xlsx format",
                                     type=[".xls", ".xlsx"])
         if vikor_bool:
-            dq = st.number_input("Enter minimum threshold for Q(A2)-Q(A1): ", value=1/3)
+            v = st.number_input("Enter weight for compromise", value=0.5)
 
 if full_file is not None:
     swot_elem = pd.read_excel(full_file, sheet_name=0)
@@ -147,7 +147,7 @@ if vikor_bool and adv_file is not None:
          .highlight_min(subset=(["Level of Individual Expenditures"], ["SO", "WO", "WT", "ST"]), color="red", axis=1)
          .set_precision(5))
 
-    st.table(vikor_object.eval_q().style.highlight_min(subset=("Q",), axis=1, color="yellow").set_precision(5))
+    st.table(vikor_object.eval_q(v).style.highlight_min(subset=("Q",), axis=1, color="yellow").set_precision(5))
 
     with col_v_2:
         st.write("### Evaluation Criteria")
@@ -156,7 +156,7 @@ if vikor_bool and adv_file is not None:
         ).set_precision(2))
 
     st.write("## Sequence of alternatives based on S, R and Q")
-    final_table, best_string = vikor_object.range(dq)
+    final_table, best_string = vikor_object.range()
     st.table(final_table)
     st.write(f"#### Best strategy (VIKOR) is " +
              f"{constants.__getattribute__(best_string) if not best_string == 'not available' else best_string}")

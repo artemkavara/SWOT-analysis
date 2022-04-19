@@ -52,7 +52,7 @@ class Vikor(BaseTopsisVikor):
 
         return q_df
 
-    def range(self, dq=1/3):
+    def range(self):
         q_df = self.eval_q().sort_values(by=["Q"], axis=1, ascending=False)
         _, eval_s_r_df = self.eval_s_r()
         eval_s_r_df.reset_index(drop=True, inplace=True)
@@ -63,7 +63,7 @@ class Vikor(BaseTopsisVikor):
             pd.Series(sorted_r.columns, name="R"),
             pd.Series(q_df.columns, name="Q")
         ], axis=1).T
-
+        dq = 1 / 3
         best_string = q_df.columns[-1] if q_df.iloc[0, -2] - q_df.iloc[0, -1] >= dq \
             else sorted_s.columns[0] if sorted_s.columns[0] == sorted_r.columns[0] else "not available"
         return final_table, best_string
